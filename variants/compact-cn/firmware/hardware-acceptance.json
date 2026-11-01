@@ -1,0 +1,22 @@
+{
+  "date": "2026-11-01",
+  "hardware_revision": "1.1",
+  "devices_tested": 1,
+  "candidate_window_sha256": "a16b047819affb8cd6cc0aa2229a5e594da2411c68a9bc064688c9a39dbb41b0",
+  "erase_blocks_verified": 207,
+  "independent_full_flash_readback_bytes": 16777216,
+  "bootloader_metadata_calibration_unchanged": true,
+  "normal_software_boots_verified": 2,
+  "jffs2_overlay_verified": true,
+  "committed_uci_value_retained_after_reboot": true,
+  "ssh_key_retained_after_reboot": true,
+  "temporary_test_config_removed": true,
+  "manual_power_cycle_required": false,
+  "luci_simplified_chinese_home_verified": true,
+  "wan_configured": false,
+  "wireless_enabled": false,
+  "all_panel_ports_verified": false,
+  "failed_boot_recovery_verified": false,
+  "routine_sysupgrade_supported": false,
+  "private_device_logs_included": false
+}

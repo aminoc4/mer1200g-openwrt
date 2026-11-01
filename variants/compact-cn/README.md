@@ -14,7 +14,7 @@ BUILD_ROOT=/path/to/openwrt sh build-package.sh
 
 脚本只编译独立包并检查 `.config` 不变。它不构建或刷写固件，不包含签名密钥；需要使用自己的构建签名密钥。简体中文翻译由上游 `luci-i18n-base-zh-cn` 与 `luci-i18n-firewall-zh-cn` 提供。
 
-此目录仅包含界面源码。当前实机安装方式是对已验收的 initramfs 环境添加四个 RAM 文件；重启丢失。APK 构建、持久化固件和刷写方法不能由此推定已经完成。
+此目录仅包含界面源码。早期界面验收使用 initramfs 中的四个 RAM 文件；当前中文界面已集成到持久化镜像，并通过了软件重启后的配置保留检查。安装程序仍属于单独审查的设备操作，不由此源码目录提供通用刷写方法。
 
 `test-home.cjs` 使用 Node 和确定性的 RPC 测试数据执行真实视图。将固定版本 LuCI 的 `modules/luci-base/htdocs/luci-static/resources/validation.js` 复制到自行创建的测试输出目录，再运行 `node test-home.cjs /path/to/output`。测试覆盖地址分类、错误状态、时间、文本转义及只读 RPC；输出目录还需上游 `bootstrap.css` 才能正确显示生成的布局预览。布局预览不代替实机验证。
 
@@ -22,4 +22,4 @@ BUILD_ROOT=/path/to/openwrt sh build-package.sh
 
 ## 持久化候选
 
-[firmware](firmware) 包含持久化候选的板级配置、完整构建配置、补丁和便携构建脚本。中文候选已构建并完成离线内容与边界检查，尚未启动或验证重启保存配置。内核与保留的 stock-luci 候选相同，仅增加中文包及此首页。常规 sysupgrade 和网页刷写入口仍禁用；此源码目录不提供可直接执行的安装授权或已验证恢复方法。
+[firmware](firmware) 包含持久化候选的板级配置、完整构建配置、补丁和便携构建脚本。中文候选已构建、刷入一台 Ver1.1，并验证真实 JFFS2 overlay、UCI 提交值和 SSH 密钥跨软件重启保留。内核与保留的 stock-luci 候选相同，仅增加中文包及此首页。常规 sysupgrade 和网页刷写入口仍禁用；此源码目录不提供可直接执行的安装授权或已验证恢复方法。

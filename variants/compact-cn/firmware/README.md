@@ -1,6 +1,6 @@
 # Compact Chinese persistent source variant
 
-This source variant adds two pinned upstream Chinese translation packages and the native MER homepage r3 to the independently built stock-LuCI persistent candidate. It is an offline/unbooted review candidate, not an approved installer. Native forms and advanced menus remain; the flash menu and mtd/sysupgrade commands stay disabled. Only rootfs_data is proposed writable. The exact hardware persistence/recovery tests remain outstanding.
+This source variant adds two pinned upstream Chinese translation packages and the native MER homepage r3 to the independently built stock-LuCI persistent candidate. The exact candidate was subsequently installed on one Ver1.1 device and passed software-reboot persistence checks; this source export is not a general installer. Native forms and advanced menus remain; the flash menu and mtd/sysupgrade commands stay disabled. Only rootfs_data is writable. Real JFFS2 overlay, committed UCI configuration and SSH keys survived a subsequent software reboot. Bootloader and protected metadata/calibration hashes remained unchanged. Failed-boot recovery remains unverified; see hardware-acceptance.json for the limited tested scope.
 
 Use the same three source archives and SHA256 values in sources.lock.json. On a supported Linux OpenWrt build host with Python3.10 extraction-filter support (or3.12+), pyelftools and normal upstream build prerequisites:
 
