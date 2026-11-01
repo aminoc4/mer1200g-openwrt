@@ -1,0 +1,22 @@
+# Build locally; attach reviewed redistributable artifacts to a release separately.
+/build/
+/downloads/
+/artifacts/
+/private/
+*.bin
+*.uimage
+*.apk
+*.pcap
+*.pcapng
+*.log
+*.key
+*.pem
+*.p12
+*.pfx
+.env
+.env.*
+*backup*
+*back-up*
+__pycache__/
+*.pyc
+

@@ -1,0 +1,18 @@
+{
+  "board": "mercury,mer1200g-v1",
+  "tested_hardware_revision": "1.1 (one device; limited acceptance)",
+  "variants": {
+    "stock-luci": {
+      "description": "Upstream LuCI layout, with experimental flash actions disabled",
+      "persistent_image_status": "built_offline_not_hardware_validated"
+    },
+    "compact-cn": {
+      "description": "Optional lightweight Simplified Chinese management interface",
+      "persistent_image_status": "not_built",
+      "ui_status": "official_chinese_translation_hardware_validated_compact_ui_in_preparation"
+    }
+  },
+  "github_publication_status": "push_authentication_pending",
+  "flash_authorization": false,
+  "github_repository": "https://github.com/aminoc4/mer1200g-openwrt"
+}
