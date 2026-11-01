@@ -5,3 +5,5 @@
 *.zip binary
 # Unified-diff context intentionally contains a leading space before tabs.
 *.patch -whitespace
+# Preserve the pinned upstream LuCI UCI template byte for byte.
+variants/compact-cn/firmware/files/etc/config/luci -whitespace

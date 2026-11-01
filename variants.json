@@ -8,7 +8,7 @@
     },
     "compact-cn": {
       "description": "Optional lightweight Simplified Chinese management interface",
-      "persistent_image_status": "not_built",
+      "persistent_image_status": "built_offline_not_hardware_validated",
       "ui_status": "ram_deployed_hardware_browser_validated"
     }
   },

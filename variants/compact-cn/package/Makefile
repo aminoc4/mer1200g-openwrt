@@ -3,6 +3,7 @@ include $(TOPDIR)/rules.mk
 
 LUCI_TITLE:=MER1200G lightweight Chinese homepage
 LUCI_DEPENDS:=+luci-base
+LUCI_MINIFY_JS:=0
 PKG_VERSION:=1.0.0
 PKG_RELEASE:=1
 PKG_LICENSE:=MIT

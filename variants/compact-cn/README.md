@@ -19,3 +19,7 @@ BUILD_ROOT=/path/to/openwrt sh build-package.sh
 `test-home.cjs` 使用 Node 和确定性的 RPC 测试数据执行真实视图。将固定版本 LuCI 的 `modules/luci-base/htdocs/luci-static/resources/validation.js` 复制到自行创建的测试输出目录，再运行 `node test-home.cjs /path/to/output`。测试覆盖地址分类、错误状态、时间、文本转义及只读 RPC；输出目录还需上游 `bootstrap.css` 才能正确显示生成的布局预览。布局预览不代替实机验证。
 
 新增界面代码采用 MIT 许可证；依赖的 OpenWrt、LuCI 等软件保留原许可证。
+
+## 持久化候选
+
+[firmware](firmware) 包含持久化候选的板级配置、完整构建配置、补丁和便携构建脚本。中文候选已构建并完成离线内容与边界检查，尚未启动或验证重启保存配置。内核与保留的 stock-luci 候选相同，仅增加中文包及此首页。常规 sysupgrade 和网页刷写入口仍禁用；此源码目录不提供可直接执行的安装授权或已验证恢复方法。

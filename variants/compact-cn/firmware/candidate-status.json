@@ -1,0 +1,12 @@
+{
+  "status": "offline_built_unbooted_do_not_flash",
+  "window_bytes": 13565952,
+  "window_sha256": "a16b047819affb8cd6cc0aa2229a5e594da2411c68a9bc064688c9a39dbb41b0",
+  "rootfs_bytes": 3007410,
+  "rootfs_sha256": "12817aba604793f582b610c3ecdb8908c95012d46f0fe24b077c80572507bda7",
+  "overlay_bytes": 4128768,
+  "kernel_matches_stock_candidate": true,
+  "persistence_hardware_validated": false,
+  "failed_boot_recovery_verified": false,
+  "binary_release_included": false
+}
