@@ -1,0 +1,42 @@
+--- a/arch/mips/ralink/Kconfig
++++ b/arch/mips/ralink/Kconfig
+@@ -1,5 +1,12 @@
+ # SPDX-License-Identifier: GPL-2.0
+ if RALINK
++
++config MER1200G_DTB_ONLY
++	bool "MER1200G: use appended DTB only, ignore firmware argv"
++	depends on SOC_MT7620 && MIPS_RAW_APPENDED_DTB
++	default n
++	help
++	  Experimental single-board build; do not use for other boards.
+ 
+ config RALINK_ILL_ACC
+ 	bool "illegal access irq"
+--- a/arch/mips/ralink/prom.c
++++ b/arch/mips/ralink/prom.c
+@@ -61,5 +61,6 @@
+ 
+ 	pr_info("SoC Type: %s\n", get_system_type());
+ 
+-	prom_init_cmdline();
++	if (!IS_ENABLED(CONFIG_MER1200G_DTB_ONLY))
++		prom_init_cmdline();
+ }
+--- a/arch/mips/ralink/of.c
++++ b/arch/mips/ralink/of.c
+@@ -94,7 +94,13 @@
+ 	 * Load the builtin devicetree. This causes the chosen node to be
+ 	 * parsed resulting in our memory appearing.
+ 	 */
+-	dtb = get_fdt();
++	if (IS_ENABLED(CONFIG_MER1200G_DTB_ONLY)) {
++		dtb = __appended_dtb;
++		if (fdt_magic(dtb) != FDT_MAGIC)
++			panic("Missing appended device tree");
++	} else {
++		dtb = get_fdt();
++	}
+ 	__dt_setup_arch(dtb);
+ 
+ 	if (early_init_dt_scan_memory())

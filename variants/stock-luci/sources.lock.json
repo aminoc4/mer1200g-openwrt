@@ -1,0 +1,20 @@
+[
+  {
+    "name": "openwrt",
+    "url": "https://codeload.github.com/openwrt/openwrt/tar.gz/refs/tags/v25.12.2",
+    "sha256": "b8feceec20f1db5c1d301b4b712798a0f365ac2318c81f484b1b240c57ab6699",
+    "file": "openwrt.tar.gz"
+  },
+  {
+    "name": "luci",
+    "url": "https://codeload.github.com/openwrt/luci/tar.gz/067535eaf51a59582b775a8b588a9b05810f8030",
+    "sha256": "c6409770596701f24fa99f094ec97e5bb653d255c9171754d1220eaf69d9345f",
+    "file": "luci.tar.gz"
+  },
+  {
+    "name": "packages",
+    "url": "https://codeload.github.com/openwrt/packages/tar.gz/268d92d3d46147efe1e81892e3a618f8bbd4806b",
+    "sha256": "ee8a5518e9689d6a86f3e015a8869efc083db42637f48ec9feb2dadacd8de48f",
+    "file": "packages.tar.gz"
+  }
+]

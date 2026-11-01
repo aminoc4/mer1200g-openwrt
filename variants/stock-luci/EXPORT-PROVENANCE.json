@@ -1,0 +1,9 @@
+{
+  "original_review_source_archive_sha256": "5b04bab82a27a79cb749af9b44cf47659147440545596c7c46aa381e15b7225a",
+  "git_export_changes": "CRLF-to-LF normalization only for original source files; local candidate status and this provenance record added",
+  "normalized_files": [
+    "MANIFEST.sha256",
+    "sources.lock.json"
+  ],
+  "review_only": true
+}

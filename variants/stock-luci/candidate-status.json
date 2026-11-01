@@ -1,0 +1,24 @@
+{
+  "status": "OFFLINE_UNBOOTED_DO_NOT_FLASH",
+  "installation_path_established": false,
+  "ui": "upstream LuCI; unsupported firmware-flash menu suppressed",
+  "kernel": "6.12.74",
+  "openwrt": "25.12.2",
+  "write_window_proposal": ["0x040000", "0xd30000"],
+  "old_79_block_writer_compatible": false,
+  "binary_assets_published": false,
+  "local_review_artifacts": {
+    "kernel.multi-uimage.DO_NOT_FLASH": {
+      "bytes": 2732318,
+      "sha256": "b52c1c650e97161db219dd19bac769ba536af43395836e3456ede72e7ee251c1"
+    },
+    "rootfs.squashfs": {
+      "bytes": 2946186,
+      "sha256": "5dc4225bdbce490230619e05a163530d7e3c67f124c4f9c8e4b29f02e119c20c"
+    },
+    "firmware-window.review.DO_NOT_FLASH.bin": {
+      "bytes": 13565952,
+      "sha256": "b62defbffaa949e50b16aa510a0f64cc5c421c0f2dd978e4b5bdfe6e8854b4e6"
+    }
+  }
+}
