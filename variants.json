@@ -10,6 +10,11 @@
       "description": "Optional lightweight Simplified Chinese management interface",
       "persistent_image_status": "one_ver1_1_device_booted_uci_ssh_persistence_verified",
       "ui_status": "persistent_chinese_home_hardware_validated"
+    },
+    "wireless-cn": {
+      "description": "Compact Chinese UI plus board-specific dual-band wireless",
+      "persistent_image_status": "one_ver1_1_booted_rx_scan_and_isolated_wpa2_ap_startup_passed",
+      "client_association_tested": false
     }
   },
   "github_publication_status": "source_published",

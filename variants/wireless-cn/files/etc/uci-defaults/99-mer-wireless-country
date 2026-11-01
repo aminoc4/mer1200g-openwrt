@@ -1,0 +1,8 @@
+#!/bin/sh
+[ -f /etc/config/wireless ] || wifi config
+for radio in $(uci show wireless | sed -n 's/^wireless\.\([^.=]*\)=wifi-device$/\1/p'); do
+ uci set wireless.$radio.country='CN'
+ uci set wireless.$radio.disabled='1'
+done
+uci commit wireless
+exit 0
