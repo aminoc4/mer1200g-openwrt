@@ -1,0 +1,25 @@
+{
+  "actual_view_executed": true,
+  "actual_upstream_ipv6_parser": true,
+  "deterministic_rpc_fixtures": true,
+  "read_only_rpc_methods": [
+    "system.board",
+    "system.info",
+    "network.interface.dump",
+    "luci-rpc.getHostHints",
+    "luci.getUnixtime"
+  ],
+  "ula_linklocal_documentation_excluded": true,
+  "unconfigured_wan_not_online": true,
+  "host_cache_not_online_count": true,
+  "pre2020_unsynchronized": true,
+  "utc_epoch_not_procd_shifted_localtime": true,
+  "rpc_failures_visible": true,
+  "html_injection_escaped": true,
+  "save_handlers_disabled": true,
+  "fixture_array_null_matches_pinned_luci": true,
+  "fixture_scalar_innerhtml_matches_pinned_luci": true,
+  "success_page_no_null_or_undefined_text": true,
+  "dynamic_rpc_values_use_text_nodes": true,
+  "device_test": false
+}

@@ -1,0 +1,13 @@
+{
+  "luci-app-mer-home": {
+    "description": "Read system and interface summaries for the MER homepage",
+    "read": {
+      "ubus": {
+        "system": [ "board", "info" ],
+        "network.interface": [ "dump" ],
+        "luci-rpc": [ "getHostHints" ],
+        "luci": [ "getUnixtime" ]
+      }
+    }
+  }
+}

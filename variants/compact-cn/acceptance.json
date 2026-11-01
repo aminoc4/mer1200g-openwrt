@@ -1,0 +1,23 @@
+{
+  "scope": "RAM-only native LuCI homepage",
+  "hardware_revision": "1.1",
+  "kernel": "6.12.74",
+  "homepage_bytes": 10103,
+  "added_files": 4,
+  "read_only_rpc_methods": 5,
+  "native_firewall_shortcut_verified": true,
+  "protected_configuration_hashes_unchanged": true,
+  "service_restart": false,
+  "flash_write": false,
+  "persistent_firmware_validated": false,
+  "apk_built": false,
+  "ui_revision": "r3",
+  "homepage_js_sha256": "ea837dea50ea38b310f4f4d34458c89ced5bc99636771e4a47aa81cde6a221a8",
+  "notes": [
+    "WAN not configured during acceptance",
+    "No ordinary global-unicast IPv6 observed",
+    "Pre-2020 device clock correctly shown as unsynchronized",
+    "Host hints explicitly not an online count",
+    "Native advanced menus retained"
+  ]
+}

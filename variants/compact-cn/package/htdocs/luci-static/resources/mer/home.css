@@ -1,0 +1,18 @@
+/* SPDX-License-Identifier: MIT; local, scoped, no external assets */
+.mer-home{--mer-ink:#173834;--mer-muted:#526966;--mer-border:#ceded9;--mer-surface:#fff;color:var(--mer-ink);max-width:1180px;margin:0 auto;padding:16px 0 24px;font-family:system-ui,sans-serif}
+.mer-home .mer-heading{display:block;padding:28px 30px;background:#e7f3ed;border:1px solid var(--mer-border);border-radius:16px;margin-bottom:22px}
+.mer-home .mer-eyebrow{font-size:12px;font-weight:700;letter-spacing:.12em;color:#356259;margin:0 0 10px}
+.mer-home .mer-heading h2{font-size:28px;line-height:1.4;font-weight:700;color:var(--mer-ink);margin:0 0 10px;padding:0;border:0}
+.mer-home .mer-heading p:last-child{margin:0;color:var(--mer-muted);line-height:1.7}
+.mer-home .mer-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.mer-home .mer-card{background:var(--mer-surface);border:1px solid var(--mer-border);border-radius:12px;padding:22px;min-width:0}
+.mer-home h3{font-size:17px;font-weight:700;margin:0 0 18px;padding:0;border:0;color:var(--mer-ink)}
+.mer-home dl{margin:0}.mer-home .mer-row{margin-bottom:16px;line-height:1.6}.mer-home .mer-row:last-child{margin-bottom:0}
+.mer-home dt{font-size:12px;font-weight:400;color:var(--mer-muted)}.mer-home dd{margin:3px 0 0;overflow-wrap:anywhere;font-size:14px}
+.mer-home .mer-note,.mer-home .mer-footnote{font-size:12px;color:var(--mer-muted);line-height:1.7;margin:18px 0 0}
+.mer-home .mer-links{margin-top:28px}.mer-home .mer-shortcuts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.mer-home .mer-shortcut{display:block;position:relative;background:#f4f8f6;border:1px solid var(--mer-border);border-radius:10px;padding:18px 34px 18px 18px;text-decoration:none;color:var(--mer-ink);min-width:0}
+.mer-home .mer-shortcut strong{display:block;font-size:15px}.mer-home .mer-shortcut>span:not(.mer-arrow){display:block;font-size:12px;line-height:1.6;color:var(--mer-muted);margin-top:6px}
+.mer-home .mer-shortcut:hover{background:#e7f3ed;border-color:#6a9788}.mer-home .mer-shortcut:focus-visible{outline:3px solid #23725f;outline-offset:3px}.mer-home .mer-arrow{position:absolute;right:16px;top:16px;font-size:18px}
+@media(max-width:980px){.mer-home .mer-shortcuts{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.mer-home{padding-top:4px}.mer-home .mer-heading{padding:22px 18px}.mer-home .mer-heading h2{font-size:23px}.mer-home .mer-grid,.mer-home .mer-shortcuts{grid-template-columns:1fr}.mer-home .mer-card{padding:20px}.mer-home .mer-card:last-child{grid-column:auto}}

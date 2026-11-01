@@ -1,0 +1,8 @@
+{
+  "admin/merhome": {
+    "title": "首页",
+    "order": 1,
+    "action": { "type": "view", "path": "mer/home" },
+    "depends": { "acl": [ "luci-app-mer-home" ] }
+  }
+}
