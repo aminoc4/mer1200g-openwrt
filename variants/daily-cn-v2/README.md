@@ -29,3 +29,5 @@ prepare.py 复用 ../compact-cn/firmware 的固定源码解包与板级补丁，
 ## 许可
 
 沿用 ../compact-cn/firmware/NOTICE.md 与 licenses/。OpenWrt2020 cascade.css 来自固定 LuCI 源码，原许可见其文件头及上游主题目录；本仓库 MIT 不重新授权第三方代码。本目录没有固件二进制、bootloader、校准备份、设备日志或个人凭据。
+
+机身 1～5 号口已逐口确认，实机角色已对齐 1 号 WAN、2～5 号 LAN；见 [网口映射与接线](../../docs/verified-ports.md)。这属于实机配置验收，不改写历史安装镜像或 ROM 恢复出厂默认值。
