@@ -1,0 +1,84 @@
+#!/bin/sh
+# Separate IoT subnet, preserving owner-set SSID and passphrase.
+. /lib/functions/system.sh
+. /lib/functions/mer1200g-factory.sh
+[ -f /etc/config/wireless ] || wifi config
+base=$(mer1200g_factory_lan_mac) || exit 1
+
+uci set network.mer_iot_bridge=device
+uci set network.mer_iot_bridge.name=br-iot
+uci set network.mer_iot_bridge.type=bridge
+uci set network.iot=interface
+uci set network.iot.device=br-iot
+uci set network.iot.proto=static
+uci set network.iot.ipaddr=192.168.30.1
+uci set network.iot.netmask=255.255.255.0
+uci set network.iot.ip6assign=64
+uci set network.lan.ip6assign=64
+
+uci set dhcp.iot=dhcp
+uci set dhcp.iot.interface=iot
+uci set dhcp.iot.start=100
+uci set dhcp.iot.limit=100
+uci set dhcp.iot.leasetime=12h
+uci set dhcp.iot.dhcpv4=server
+uci set dhcp.iot.dhcpv6=server
+uci set dhcp.iot.ra=server
+
+uci set firewall.mer_iot=zone
+uci set firewall.mer_iot.name=iot
+uci set firewall.mer_iot.network=iot
+uci set firewall.mer_iot.input=REJECT
+uci set firewall.mer_iot.output=ACCEPT
+uci set firewall.mer_iot.forward=REJECT
+uci set firewall.mer_iot_wan=forwarding
+uci set firewall.mer_iot_wan.src=iot
+uci set firewall.mer_iot_wan.dest=wan
+uci set firewall.mer_lan_iot=forwarding
+uci set firewall.mer_lan_iot.src=lan
+uci set firewall.mer_lan_iot.dest=iot
+
+uci set firewall.mer_iot_dns=rule
+uci set firewall.mer_iot_dns.name=IoT-DNS
+uci set firewall.mer_iot_dns.src=iot
+uci set firewall.mer_iot_dns.proto='tcp udp'
+uci set firewall.mer_iot_dns.dest_port=53
+uci set firewall.mer_iot_dns.target=ACCEPT
+uci set firewall.mer_iot_dhcp=rule
+uci set firewall.mer_iot_dhcp.name=IoT-DHCP
+uci set firewall.mer_iot_dhcp.src=iot
+uci set firewall.mer_iot_dhcp.proto=udp
+uci set firewall.mer_iot_dhcp.dest_port='67 547'
+uci set firewall.mer_iot_dhcp.target=ACCEPT
+uci set firewall.mer_iot_icmp6=rule
+uci set firewall.mer_iot_icmp6.name=IoT-ICMPv6
+uci set firewall.mer_iot_icmp6.src=iot
+uci set firewall.mer_iot_icmp6.proto=icmp
+uci set firewall.mer_iot_icmp6.family=ipv6
+uci set firewall.mer_iot_icmp6.limit=1000/sec
+uci set firewall.mer_iot_icmp6.target=ACCEPT
+uci -q delete firewall.mer_iot_icmp6.icmp_type
+for type in destination-unreachable packet-too-big time-exceeded bad-header unknown-header-type router-solicitation neighbour-solicitation neighbour-advertisement; do
+ uci add_list firewall.mer_iot_icmp6.icmp_type="$type"
+done
+
+if [ "$(uci -q get wireless.iot)" != wifi-iface ]; then
+ uci set wireless.iot=wifi-iface
+ uci set wireless.iot.ssid=IoT
+ key=$(uci -q get wireless.default_radio1.key)
+ if [ ${#key} -ge 8 ] && [ ${#key} -le 63 ]; then
+  uci set wireless.iot.key="$key"
+  uci set wireless.iot.disabled=0
+ else
+  uci set wireless.iot.disabled=1
+ fi
+fi
+uci set wireless.iot.device=radio1
+uci set wireless.iot.network=iot
+uci set wireless.iot.mode=ap
+uci set wireless.iot.encryption=psk2+ccmp
+uci set wireless.iot.ieee80211w=0
+uci set wireless.iot.macaddr="$(macaddr_setbit_la "$(macaddr_add "$base" 4)")"
+
+for config in network dhcp firewall wireless; do uci commit "$config"; done
+exit 0

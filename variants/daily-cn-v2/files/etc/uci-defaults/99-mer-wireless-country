@@ -1,0 +1,16 @@
+#!/bin/sh
+. /lib/functions/system.sh
+. /lib/functions/mer1200g-factory.sh
+[ -f /etc/config/wireless ] || wifi config
+base=$(mer1200g_factory_lan_mac) || exit 1
+for radio in $(uci show wireless | sed -n 's/^wireless\.\([^.=]*\)=wifi-device$/\1/p'); do
+ uci set wireless.$radio.country=CN
+done
+for section in default_radio0 default_radio1; do
+ [ "$(uci -q get wireless.$section)" = wifi-iface ] || continue
+ [ -n "$(uci -q get wireless.$section.macaddr)" ] && continue
+case "$section" in default_radio0) delta=2;; *) delta=3;; esac
+ uci set wireless.$section.macaddr="$(macaddr_setbit_la "$(macaddr_add "$base" "$delta")")"
+done
+uci commit wireless
+exit 0

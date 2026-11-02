@@ -15,6 +15,12 @@
       "description": "Compact Chinese UI plus board-specific dual-band wireless",
       "persistent_image_status": "one_ver1_1_booted_rx_scan_and_isolated_wpa2_ap_startup_passed",
       "client_association_tested": false
+    },
+    "daily-cn-v2": {
+      "description": "Upstream OpenWrt2020 Chinese theme, isolated WPA2 IoT, PPPoE/DDNS/HTTPS, larger writable overlay",
+      "persistent_image_status": "one_ver1_1_boot_config_hostkeys_and_three_aps_survived_software_reboot",
+      "overlay_free_kib": 5276,
+      "wan_and_client_acceptance": false
     }
   },
   "github_publication_status": "source_published",

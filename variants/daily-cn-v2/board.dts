@@ -1,0 +1,77 @@
+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
+// Experimental: MDIO address/CPU port supported by stock evidence; RGMII timing remains a C5-derived hypothesis.
+#include "mt7620a.dtsi"
+
+/ {
+ compatible = "mercury,mer1200g-v1", "ralink,mt7620a-soc";
+ model = "Mercury MER1200G v1";
+ memory@0 { device_type = "memory"; reg = <0x0 0x08000000>; };
+ chosen { bootargs = "console=ttyS0,115200 rootfstype=squashfs"; bootargs-override = "console=ttyS0,115200 rootfstype=squashfs"; };
+ rtl8367s {
+  compatible = "realtek,rtl8367b";
+  realtek,extif = <7 1 4 1 1 1 1 1 1 2>;
+  mii-bus = <&mdio0>;
+  phy-id = <29>;
+ };
+};
+&gpio1 { status = "okay"; };
+&gpio2 { status = "okay"; };
+&gpio3 { status = "okay"; };
+&state_default {
+ gpio { groups = "i2c", "uartf", "ephy", "rgmii2"; function = "gpio"; };
+};
+&spi0 {
+ status = "okay";
+ flash@0 {
+  compatible = "jedec,spi-nor";
+  reg = <0>;
+  spi-max-frequency = <30000000>;
+  partitions {
+   compatible = "fixed-partitions";
+   #address-cells = <1>; #size-cells = <1>;
+   partition@0 { label = "bootloader"; reg = <0x000000 0x040000>; read-only; };
+   partition@40000 { label = "kernel"; reg = <0x040000 0x300000>; read-only; };
+   partition@340000 { label = "rootfs"; reg = <0x340000 0x480000>; read-only; linux,rootfs; };
+   partition@7c0000 { label = "rootfs_data"; reg = <0x7c0000 0x570000>; };
+   partition@d30000 { label = "device-info"; reg = <0xd30000 0x010000>; read-only; };
+   partition@d40000 { label = "firmware-info"; reg = <0xd40000 0x010000>; read-only; };
+   partition@d50000 { label = "tddp"; reg = <0xd50000 0x010000>; read-only; };
+   partition@d60000 { label = "log"; reg = <0xd60000 0x020000>; read-only; };
+   partition@d80000 { label = "reserved"; reg = <0xd80000 0x070000>; read-only; };
+   partition@df0000 { label = "rootfs-data-stock"; reg = <0xdf0000 0x200000>; read-only; };
+   partition@ff0000 {
+    label = "art"; reg = <0xff0000 0x010000>; read-only;
+    nvmem-layout {
+     compatible = "fixed-layout";
+     #address-cells = <1>; #size-cells = <1>;
+     eeprom_mer_2g: eeprom@0 { reg = <0x0 0x200>; };
+     eeprom_mer_5g: eeprom@1000 { reg = <0x1000 0x200>; };
+    };
+   };
+  };
+ };
+};
+&ethernet {
+ pinctrl-names = "default";
+ pinctrl-0 = <&rgmii1_pins &mdio_pins>;
+ port@5 { status = "okay"; mediatek,fixed-link = <1000 1 1 1>; phy-mode = "rgmii"; };
+ mdio0: mdio-bus { status = "okay"; };
+};
+&wmac {
+ status = "okay";
+ pinctrl-names = "default", "pa_gpio";
+ pinctrl-0 = <&pa_pins>;
+ pinctrl-1 = <&pa_gpio_pins>;
+ nvmem-cells = <&eeprom_mer_2g>;
+ nvmem-cell-names = "eeprom";
+};
+&pcie { status = "okay"; };
+&pcie0 {
+ wifi@0,0 {
+  compatible = "mediatek,mt76";
+  reg = <0x0000 0 0 0 0>;
+  ieee80211-freq-limit = <5000000 6000000>;
+  nvmem-cells = <&eeprom_mer_5g>;
+  nvmem-cell-names = "eeprom";
+ };
+};

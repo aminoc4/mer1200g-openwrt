@@ -1,0 +1,23 @@
+#!/bin/sh
+# Settings migration is idempotent. Existing wireless credentials stay local.
+uci set luci.main.lang=zh_cn
+uci set luci.main.mediaurlbase=/luci-static/openwrt2020
+uci -q delete luci.themes.Bootstrap
+uci set luci.themes.OpenWrt2020=/luci-static/openwrt2020
+uci commit luci
+uci set system.@system[0].timezone=CST-8
+uci set system.@system[0].zonename=Asia/Shanghai
+uci commit system
+uci set uhttpd.main.redirect_https=1
+uci set uhttpd.main.cert=/etc/uhttpd.crt
+uci set uhttpd.main.key=/etc/uhttpd.key
+uci set uhttpd.defaults=cert
+uci set uhttpd.defaults.key_type=ec
+uci set uhttpd.defaults.ec_curve=P-256
+uci set uhttpd.defaults.commonname=mer1200g.lan
+uci set uhttpd.defaults.country=CN
+uci set uhttpd.defaults.organization=MER1200G
+uci -q delete uhttpd.main.listen_https
+uci add_list uhttpd.main.listen_https=192.168.1.1:443
+uci commit uhttpd
+exit 0

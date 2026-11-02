@@ -1,0 +1,22 @@
+{
+  "hardware": "MER1200G Ver1.1, one unit",
+  "written_and_booted": true,
+  "kernel_rootfs_readback_verified": true,
+  "protected_regions_unchanged": true,
+  "overlay_free_kib_after_configuration": 5276,
+  "three_aps_started": true,
+  "iot_fw4_rules_installed": true,
+  "qemu_scope": "MIPS userspace UCI migration and bounded writer tests only",
+  "owner_credentials_unchanged": true,
+  "software_reboot_persistence": "passed on one Ver1.1 unit",
+  "wan_and_client_acceptance": false,
+  "generic_sysupgrade_supported": false,
+  "seed_initialization_bug": "recovered via existing owner backup on initialized JFFS2; faulty private image retired",
+  "actual_wireless_bridge_membership_verified": true,
+  "https_verified_tls": "TLSv1.3 with certificate and hostname validation",
+  "http_redirect_to_https_verified": true,
+  "chinese_luci_wireless_and_ddns_pages_loaded": true,
+  "iot_client_datapath_tested": false,
+  "ntp_upstream_sync_tested": false,
+  "wall_clock_set_from_host": true
+}
