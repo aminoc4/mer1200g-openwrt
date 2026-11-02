@@ -38,5 +38,6 @@
   "pppoe_and_pd_actual_isp_tested": false,
   "ipv6_router_slaac_dns_https_via_temporary_pc_bridge_tested": true,
   "ipv6_client_public_forwarding_tested": false,
-  "panel_3_link_speed_recheck_pending": true
+  "panel_3_link_speed_recheck_pending": false,
+  "all_five_panel_ports_gigabit_link_observed": true
 }
