@@ -16,7 +16,7 @@
 
 镜像内移除 Bootstrap 和旧自制首页，保留单一主题。已有无线名称与密码由迁移钩子保留；管理员密码、宽带账号和 DDNS 服务由使用者配置。
 
-接线与管理入口见 [项目首页](../../README.md)，内部端口对应关系见 [网口映射](../../docs/verified-ports.md)。
+原厂 SSH 下的备份与安装流程见 [原厂 SSH 安装文档](../../docs/install-from-stock-ssh.md)，内部端口对应关系见 [网口映射](../../docs/verified-ports.md)。
 
 ## 构建
 
