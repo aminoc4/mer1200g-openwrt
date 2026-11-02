@@ -20,3 +20,9 @@
 __pycache__/
 *.pyc
 
+
+# Per-device installer output
+**/mer-install-private*/
+**/install_policy.h
+**/installer/out/
+**/installer/private*/

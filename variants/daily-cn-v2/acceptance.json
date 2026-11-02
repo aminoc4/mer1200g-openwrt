@@ -39,5 +39,15 @@
   "ipv6_router_slaac_dns_https_via_temporary_pc_bridge_tested": true,
   "ipv6_client_public_forwarding_tested": false,
   "panel_3_link_speed_recheck_pending": false,
-  "all_five_panel_ports_gigabit_link_observed": true
+  "all_five_panel_ports_gigabit_link_observed": true,
+  "stock_ssh_v2_installer": {
+    "source_published": true,
+    "target_blocks": 207,
+    "same_c_core_cases": 55,
+    "controller_checks": 57,
+    "asan_ubsan_passed": true,
+    "qemu_memory_nor_and_ipc_passed": true,
+    "stock_to_v2_full_hardware_flow_tested": false,
+    "current_router_modified_during_tool_tests": false
+  }
 }

@@ -41,6 +41,7 @@ python3 tools/package-review.py /path/to/new-build /path/to/new-output
 | `build.sh` | 固定 LuCI 版本的构建入口 |
 | `tools/package-review.py` | 内核封装与镜像窗口生成 |
 | `MANIFEST.sha256` | 本目录文件校验清单 |
+| `installer/` | 原厂 SSH 首装工具、电脑端入口与离线测试 |
 
 ## 分区布局
 

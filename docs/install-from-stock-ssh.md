@@ -2,7 +2,9 @@
 
 从 MER1200G 原厂系统已经开启 SSH、能够以 root 登录开始，按备份、准备镜像、RAM 接管、写入和启动的顺序整理。
 
-**当前仓库提供固件构建源码；原厂 SSH 安装工具包与统一执行入口尚未发布。** 第 1～4 节给出可执行的准备步骤，第 5～7 节说明本机实际采用的安装过程和工具接口。安装器整理进度见 [开发记录](development-notes.md)。
+仓库提供 [原厂 SSH 安装工具源码](../variants/daily-cn-v2/installer/README.md)，流程为：备份 → 构建固件与本机工具包 → 只读演练 → 返回原厂 → 正式刷写 → 启动验收。
+
+当前 207 块安装器已通过离线与 QEMU 用户态测试，原厂直接安装 v2 的完整硬件流程待实机复验；v2 系统本身已在 MER1200G Ver1.1 上运行并通过重启验收。
 
 ## 1. 电脑连接与登录
 
@@ -122,74 +124,95 @@ sha256sum /path/to/output/rootfs.squashfs
 sha256sum /path/to/output/firmware-window.review.DO_NOT_FLASH.bin
 ```
 
-将输出文件复制到 Windows 当前目录后，上传到路由器 `/tmp`，再下载到不同文件名校验传输结果：
+## 5. 编译本机安装工具包
+
+安装器保留原厂 bootloader，通过原厂 procd 进入 RAM，正常卸载旧根文件系统，再执行限定范围写入。它使用本机原厂整片备份生成校验策略。
+
+在 Linux / WSL 的仓库根目录执行。`STAGING_DIR` 和 `--cc` 使用第 4 节固件构建目录内的工具链，示例路径替换为自己的实际路径：
+
+```sh
+export STAGING_DIR=/path/to/new-build/staging_dir
+python3 variants/daily-cn-v2/installer/build_bundle.py \
+  --backup /mnt/c/mer1200g-backup/mer1200g-full-backup.bin \
+  --image /path/to/output/firmware-window.review.DO_NOT_FLASH.bin \
+  --output /mnt/c/mer-install-private \
+  --cc /path/to/new-build/staging_dir/toolchain-mipsel_24kc_gcc-14.3.0_musl/bin/mipsel-openwrt-linux-musl-gcc
+```
+
+输出的 `C:\mer-install-private` 包含镜像、四个静态工具、`manifest.json` 和本机校验策略。它与刚才的原厂备份配套使用。生成器会核对 uImage CRC、MIPS 入口、DTB 内存/分区布局和空白 JFFS2 初始化标记。
+
+离线测试命令见 [安装工具文档](../variants/daily-cn-v2/installer/README.md#离线测试)。
+
+## 6. 电脑端检查和上传
+
+电脑网卡设为 **192.168.1.2 / 255.255.255.0**，直连原厂 LAN；路由器地址为 **192.168.1.1**。这套入口固定使用这些地址和原厂 SSH 端口 **33400**。路由器暂时只连接这台电脑，拔下其他业务网线。
+
+安装 Python 3 和 Paramiko，在 Windows PowerShell 中从仓库根目录执行：
 
 ```powershell
-scp -O -P 33400 .\firmware-window.review.DO_NOT_FLASH.bin root@192.168.1.1:/tmp/mer1200g-v2-window.bin
-scp -O -P 33400 root@192.168.1.1:/tmp/mer1200g-v2-window.bin .\mer1200g-v2-window.readback.bin
-Get-FileHash .\firmware-window.review.DO_NOT_FLASH.bin -Algorithm SHA256
-Get-FileHash .\mer1200g-v2-window.readback.bin -Algorithm SHA256
+py -m pip install paramiko
+py .\variants\daily-cn-v2\installer\install.py inspect --bundle C:\mer-install-private
 ```
 
-两份 SHA-256 应与 `review.json` 对应值一致。这样即使原厂 SSH 没有 `sha256sum`，也能核对上传后的完整文件。
+首次连接显示路由器 SSH 指纹，核对后输入 `yes`，再输入原厂 root 密码。密码从终端读取。`inspect` 只读核对原厂 10 个分区、128 MiB 内存及备份对应的原厂数据。
 
-## 5. 原厂 SSH 下实际如何进入刷写阶段
+进度通过 `192.168.1.1 → 192.168.1.2:39001/UDP` 接收。Windows 防火墙需要允许这个入站通路；可在管理员 PowerShell 中为直连网卡创建规则（将 `以太网` 替换为实际网卡名称）：
 
-本机安装采用 **原厂 procd 升级通路 → RAM 环境 → 受限写入器**，保留原厂 bootloader。进入 RAM 后，旧根文件系统正常卸载，再开始擦写。
-
-第一次从原厂启动 OpenWrt 时，使用过以下专用文件名：
-
-| 路由器中的路径 | 用途 |
-| --- | --- |
-| `/tmp/mer1200g-rx4-experimental.uimage` | 最初的 OpenWrt initramfs 启动镜像 |
-| `/tmp/mer_preflight_v3` | 镜像与原厂 MTD 预检查 |
-| `/tmp/mer_writer_preflight` | RAM 内的闪存只读检查助手 |
-| `/tmp/mer_install_write_v4.review` | 带 RAM 接管逻辑的首装写入器 |
-| `/tmp/mer-install-write-v4.contract` | 与该写入器配套的执行契约 |
-
-原厂阶段实际使用的预检查命令是：
-
-```sh
-/tmp/mer_install_write_v4.review --build-info
-/tmp/mer_preflight_v3 --image /tmp/mer1200g-rx4-experimental.uimage --mtd /dev/mtd9
+```powershell
+New-NetFirewallRule -DisplayName "MER1200G install progress" -Direction Inbound -Action Allow -Protocol UDP -LocalAddress 192.168.1.2 -LocalPort 39001 -RemoteAddress 192.168.1.1 -InterfaceAlias "以太网" -Profile Any
 ```
 
-检查器核对镜像、NOR 几何、当前系统和原厂备份基线。配套文件及契约准备完成后，写入器复制到原厂升级机制使用的 `/tmp/upgraded`，通过以下实际接口接管：
+接着上传并检查：
 
-```sh
-cp /tmp/mer_install_write_v4.review /tmp/upgraded
-chmod 500 /tmp/upgraded
-ubus call system nandupgrade '{"path":"/tmp/mer-install-write-v4.contract"}'
+```powershell
+py .\variants\daily-cn-v2\installer\install.py stage --bundle C:\mer-install-private
 ```
 
-上面是**早期 initramfs 首装工具的实际接口**，对应 79 个擦除块的旧启动镜像。当前 v2 的目标是完整 207 块窗口，原厂到 v2 的统一安装包需要配套整理；两者的镜像、契约和写入范围分别生成。
+`stage` 上传工具和镜像，读回校验 SHA-256，再运行路由器端流式只读检查。后续入口也会重新核对这些文件。
 
-## 6. 写入进度与完成条件
+## 7. 只读演练
 
-RAM 接管后原厂 SSH 会退出，电脑通过独立进度接收器查看执行结果。首装工具曾向电脑 `192.168.1.2:39001/UDP` 发送进度；本机操作先启动接收器，再触发升级接口。
+```powershell
+py .\variants\daily-cn-v2\installer\install.py rehearse --bundle C:\mer-install-private
+```
 
-写入器依次执行：
+程序先启动进度接收器，再调用一次原厂升级接口进入 RAM。原厂 SSH 和网页会退出，电脑端继续显示阶段进度。此步骤读取完整闪存快照、核对数据、完成旧系统卸载，不执行固件区域擦写。
 
-1. 读取当前闪存快照，核对镜像和原厂数据。
-2. 确认旧文件系统已卸载，待写区域没有继续作为运行根目录使用。
-3. 按 64 KiB 块擦除、检查擦除结果、分页写入，并逐块读回。
-4. 关闭写入描述符，完整回读目标窗口。
-5. 比对 bootloader、厂商元数据和 ART 等窗口外区域。
-6. 输出最终完成记录。
+看到下面的最终结果后，将路由器断电约 5 秒再上电，等待原厂系统重新启动：
 
-当前 v2 的实际升级记录采用 **207/207 块验证完成、完整窗口哈希一致、保护区域一致、退出码为 0** 作为成功条件。早期 79 块首装工具则使用对应的 `FINAL` 记录及校验字段。
+```text
+PASS read-only snapshot and RAM handover. Power-cycle the router to return to original stock.
+```
 
-## 7. 重启并核对安装结果
+演练记录保存在工具包的 `rehearsal.json`，详细记录在 `run-*` 目录。正式刷写会核对同一工具包、同一 SSH 主机密钥以及已经改变的 boot ID。
 
-按安装器的结束方式重启：早期首装在最终记录完成后断电重启；后续带 RAM SSH 的持久版升级在全部读回通过后执行软件重启。
+## 8. 正式刷写
 
-进入 OpenWrt 后，用新系统的 SSH 端口登录：
+回到原厂系统后，在电脑执行：
+
+```powershell
+py .\variants\daily-cn-v2\installer\install.py flash --bundle C:\mer-install-private
+```
+
+入口重新检查原厂和文件，进入 RAM 后，逐块擦除、检查、分页写入、读回校验。目标共 **207 块**，物理范围 `[0x040000, 0xd30000)`；bootloader 和范围外的数据保持原样。
+
+程序核对连续三条 FINAL：207 块完成、完整窗口 SHA-256 一致、范围外数据一致、写入描述符关闭及错误码为 0。最终显示：
+
+```text
+PASS final readback and preserved regions. Power-cycle the router to boot OpenWrt.
+```
+
+此时断电约 5 秒再上电，启动 OpenWrt。对应 `run-*` 目录的 `result.json` 应为 `completed: true`。若未收到 PASS，先查看该目录的 `result.json`、`progress.json` 和 `packets.jsonl`；SSH 断开本身不代表完成。
+
+## 9. 启动验收
+
+新系统 SSH 端口为 **22**，原厂为 **33400**。首次启动后，电脑登录：
 
 ```powershell
 ssh root@192.168.1.1
 ```
 
-检查新系统、分区与可写挂载：
+在新系统执行：
 
 ```sh
 ubus call system board
@@ -197,8 +220,19 @@ cat /proc/mtd
 mount
 df -h /overlay
 readlink /overlay/.fs_state
+passwd
 ```
 
-v2 中 `kernel` 为 3 MiB、`rootfs` 为 4.5 MiB、`rootfs_data` 为 5.4375 MiB；`/overlay` 挂载为 JFFS2，`.fs_state` 链接目标为 `2`。最后进行一次正常软件重启，复核配置和 SSH 密钥保留情况。
+应识别为 MER1200G；`kernel` 为 3 MiB、`rootfs` 为 4.5 MiB、`rootfs_data` 为 5.4375 MiB；`/overlay` 为 JFFS2，`.fs_state` 为 `2`。`passwd` 由自己设置 root 密码。
 
-网口对应关系见 [机身网口映射](verified-ports.md)。安装镜像的 ROM 初始配置与当前实机已经提交的网口角色分别记录在 [开发记录](development-notes.md)。
+验证配置写入并正常重启：
+
+```sh
+uci set system.@system[0].hostname='MER1200G'
+uci commit system
+reboot
+```
+
+重新登录后，`uci get system.@system[0].hostname` 应仍为 `MER1200G`，SSH 主机密钥保持不变，`/overlay` 正常挂载。
+
+当前镜像首次启动时五个网口均为 LAN；已运行设备的“1 号 WAN、2～5 号 LAN”是后续提交的配置。机身和交换机端口的对应关系见 [网口映射](verified-ports.md)。
